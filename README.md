@@ -1,6 +1,6 @@
 <img src="./assets/banner.png" alt="Ika Tools"/>
 
-# 🐠 **Ika Tools** 🐠
+# 🐙 **Ika Tools**
 
 This repository provides a powerful monitoring stack for Ika Validator and Sui Fullnode deployments, combining Prometheus for metric collection, Alertmanager for multi-channel notifications **(Telegram, Discord, Slack)**, and Grafana for visualization. It includes ready-made scrape and alerting configurations, systemd service units, and alert rules targeting consensus progress, sync checks, and node availability. Finally, it automates Grafana provisioning of the dashboard, with a configurable authority variable to filter panels to your own validator.
 
