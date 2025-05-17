@@ -1,17 +1,11 @@
 <img src="./assets/banner.png" alt="Ika Tools"/>
 
-<br>
-<div style="text-align:center; font-size:3em; line-height:1.2; font-weight:bold;">
-  🐙 Ika Monitoring 🐙
-</div>
-<br>
-
-# ----------- 🐠 Introduction -----------
+# 🐠 **Ika Tools** 🐠
 
 This repository provides a powerful monitoring stack for Ika Validator and Sui Fullnode deployments, combining Prometheus for metric collection, Alertmanager for multi-channel notifications **(Telegram, Discord, Slack)**, and Grafana for visualization. It includes ready-made scrape and alerting configurations, systemd service units, and alert rules targeting consensus progress, sync checks, and node availability. Finally, it automates Grafana provisioning of the dashboard, with a configurable authority variable to filter panels to your own validator.
----
-🔥 **Our public dashboard is available here:** https://grafana.trusted-point.com/public-dashboards/bfabcced297e4ffab624b2576dd9f61c
----
+
+### **Our public dashboard is available here:** https://grafana.trusted-point.com/public-dashboards/bfabcced297e4ffab624b2576dd9f61c
+
 ## 🚀 Future Plans
 - Add Docker support for easy, containerized deployments.
 - Enhance server monitoring, including system-level metrics and log collection.
@@ -20,14 +14,14 @@ Contributions are highly welcomed! Feel free to open issues and submit pull requ
 
 ## 📚 Table of Contents
 
-* [Introduction](#introduction)
+* [Introduction]()
 * [Docker Setup - TBA]()
 * [Manual Installation](#manual-installation)
   * [1. Prometheus](#1-prometheus)
   * [2. Grafana](#2-grafana)
   * [3. Alertmanager](#3-alertmanager)
 
-# ----------- *Manual Installation* -----------
+# **Manual Installation**
 
 ## 1. Prometheus
 
