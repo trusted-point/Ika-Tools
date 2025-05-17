@@ -25,18 +25,25 @@ Contributions are highly welcomed! Feel free to open issues and submit pull requ
 
 ## 1. Prometheus
 
+### 1.0 Define your variables
+
+```bash
+VERSION="3.3.1"
+ARCH="linux-amd64"
+PROMETHEUS_HOST="127.0.0.1"
+PROMETHEUS_PORT="9090"
+SUI_METRICS_TARGET="127.0.0.1:9174"
+IKA_METRICS_TARGET="127.0.0.1:9184"
+```
 ### 1.1 Create a prometheus user and directories
 
 ```bash
 sudo useradd --no-create-home --shell /bin/false prometheus
 sudo mkdir /etc/prometheus /var/lib/prometheus
 ```
-
 ### 1.2 Download & unpack the latest Prometheus
 
 ```bash
-VERSION="3.3.1"
-ARCH="linux-amd64"
 cd /etc/prometheus
 wget https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.${ARCH}.tar.gz
 tar xvf prometheus-${VERSION}.${ARCH}.tar.gz --strip-components=1
@@ -47,33 +54,23 @@ sudo cp ./prometheus ./promtool /usr/local/bin/
 ### 1.3 Create config (Update targets if needed)
 
 ```bash
-sudo tee /etc/prometheus/prometheus.yml > /dev/null << 'EOF'
+sudo tee /etc/prometheus/prometheus.yml > /dev/null <<EOF
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
   scrape_timeout: 10s
 
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-            - alertmanager:9093
-
-rule_files:
-  - "sui_fullnode_alerts.yml"
-  - "ika_validator_alerts.yml"
-
 scrape_configs:
   - job_name: "Ika-Validator"
     static_configs:
-      - targets: ["127.0.0.1:9184"]
+      - targets: ["${IKA_METRICS_TARGET}"]
         labels:
           group: 'IkaValidator'
           network: 'testnet'
 
   - job_name: "Sui-Fullnode"
     static_configs:
-      - targets: ["127.0.0.1:9174"]
+      - targets: ["${SUI_METRICS_TARGET}"]
         labels:
           group: 'Fullnode'
           network: 'testnet'
@@ -87,7 +84,7 @@ sudo chown -R prometheus:prometheus /etc/prometheus /var/lib/prometheus
 ### 1.4 Create systemd unit
 
 ```bash
-sudo tee /etc/systemd/system/prometheus.service << 'EOF'
+sudo tee /etc/systemd/system/prometheus.service <<EOF
 [Unit]
 Description=Prometheus
 Wants=network-online.target
@@ -100,7 +97,7 @@ Type=simple
 ExecStart=/usr/local/bin/prometheus \
   --config.file=/etc/prometheus/prometheus.yml \
   --storage.tsdb.path=/var/lib/prometheus \
-  --web.listen-address="127.0.0.1:9090"
+  --web.listen-address="${PROMETHEUS_HOST}:${PROMETHEUS_PORT}"
 
 [Install]
 WantedBy=multi-user.target
@@ -117,6 +114,7 @@ sudo journalctl -u prometheus -f -o cat
 ```
 
 ## 2. Grafana
+
 
 ### 2.1 Install prerequisites and add Grafana APT repository
 
@@ -152,14 +150,14 @@ sudo journalctl -u grafana-server -f -o cat
 **Option A:** Create a provisioning YAML so Grafana will load the Prometheus data source on startup:
 
 ```bash
-sudo tee /etc/grafana/provisioning/datasources/prometheus.yaml > /dev/null <<EOF
+sudo tee /etc/grafana/provisioning/datasources/prometheus.yaml > /dev/null << EOF
 apiVersion: 1
 
 datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: http://127.0.0.1:9090
+    url: http://${PROMETHEUS_HOST}:${PROMETHEUS_PORT}
     isDefault: true
     editable: true
 EOF
@@ -172,7 +170,7 @@ sudo systemctl restart grafana-server && sudo journalctl -u grafana-server -f -o
 **Option B:** Grafana supports adding data sources via the UI or entirely from the terminal (CLI).
 
 * Navigate to Configuration → Data Sources → Add data source.
-* Select Prometheus, set the URL to `http://127.0.0.1:9090`, and click Save & Test.
+* Select Prometheus, set the URL to `http://127.0.0.1:<PROMETHEUS_PORT>`, and click Save & Test.
 
 ### 2.6 Provision Ika Dashboard
 
@@ -184,13 +182,13 @@ sudo chown grafana:grafana /var/lib/grafana/dashboards
 ```
 
 ```bash
-sudo tee /etc/grafana/provisioning/dashboards/dashboard.yaml > /dev/null <<EOF
+sudo tee /etc/grafana/provisioning/dashboards/dashboard.yaml > /dev/null << EOF
 apiVersion: 1
 
 providers:
   - name: 'ika-sui'
     orgId: 1
-    folder: 'Dashboards'
+    folder: ''
     type: 'file'
     disableDeletion: false
     editable: true
@@ -227,6 +225,23 @@ sudo systemctl restart grafana-server && sudo journalctl -u grafana-server -f -o
 
 ## 3. Alertmanager
 
+### 3.0 Set up variables
+
+**NOTE:** If you don’t want to enable some of the provided notification channels, simply comment out its corresponding entry both under the `route:` section and in the `receivers:` list. Also, ensure that the final route (PagerDuty) does not include continue: true, so that alerts aren’t passed on after routing to PagerDuty.
+
+```bash
+VERSION="0.28.1"
+ARCH="linux-amd64"
+ALERTMANAGER_HOST="127.0.0.1"
+ALERTMANAGER_PORT="9093"
+ALERTMANAGER_WEBHOOK_PORT="9092"
+TELEGRAM_BOT_TOKEN="123:AAA-AAA"
+TELEGRAM_CHAT_ID="-123"
+DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/123/AAA-BBB-CCC"
+SLACK_WEBHOOK_URL="https://hooks.slack.com/services/AAA/BBB/CCC"
+PAGERDUTY_INTEGRATION_KEY="123abc"
+```
+
 ### 3.1 Create an alertmanager user and directories
 
 ```bash
@@ -237,26 +252,11 @@ sudo mkdir /etc/alertmanager /var/lib/alertmanager
 ### 3.2 Download & unpack the latest Alertmanager
 
 ```bash
-VERSION="0.28.1"
-ARCH="linux-amd64"
 cd /etc/alertmanager
-wget https://github.com/prometheus/alertmanager/releases/download/v${VERSION}/alertmanager-${VERSION}.${ARCH}.tar.gz
-tar xvf alertmanager-${VERSION}.${ARCH}.tar.gz --strip-components=1
+sudo wget https://github.com/prometheus/alertmanager/releases/download/v${VERSION}/alertmanager-${VERSION}.${ARCH}.tar.gz
+sudo tar xvf alertmanager-${VERSION}.${ARCH}.tar.gz --strip-components=1
 ./alertmanager --version && ./amtool --version
 sudo cp ./alertmanager ./amtool /usr/local/bin/
-```
-
-### 3.3 Set up variables
-
-**NOTE:** If you don’t want to enable some of the provided notification channels, simply comment out its corresponding entry both under the `route:` section and in the `receivers:` list. Also, ensure that the final route (PagerDuty) does not include continue: true, so that alerts aren’t passed on after routing to PagerDuty.
-
-```bash
-TELEGRAM_BOT_TOKEN=123:AAA-AAA
-TELEGRAM_CHAT_ID=-123
-DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/123/AAA-BBB-CCC
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/AAA/BBB/CCC
-PAGERDUTY_INTEGRATION_KEY=123abc
-ALERTMANAGER_WEBHOOK_PORT=9092
 ```
 
 ### 3.4 Set up Alertmanager config
@@ -322,7 +322,7 @@ sudo chown -R alertmanager:alertmanager /etc/alertmanager /var/lib/alertmanager
 ### 3.6 Create systemd unit
 
 ```bash
-sudo tee /etc/systemd/system/alertmanager.service << 'EOF'
+sudo tee /etc/systemd/system/alertmanager.service << EOF
 [Unit]
 Description=Prometheus Alertmanager
 Wants=network-online.target
@@ -335,7 +335,7 @@ Type=simple
 ExecStart=/usr/local/bin/alertmanager \
   --config.file=/etc/alertmanager/alertmanager.yml \
   --storage.path=/var/lib/alertmanager \
-  --web.listen-address="127.0.0.1:9093"
+  --web.listen-address="${ALERTMANAGER_HOST}:${ALERTMANAGER_PORT}"
 
 [Install]
 WantedBy=multi-user.target
@@ -353,21 +353,21 @@ sudo journalctl -u alertmanager -f -o cat
 
 ### 🚨 Ika Validator Alerts Overview
 
-* ⏳ **IkaNoLeaderRoundProgress** — triggered when ~`consensus_last_committed_leader_round`~ is stuck.
+* ⚠️ **IkaNoLeaderRoundProgress** — triggered when `consensus_last_committed_leader_round` is stuck.
 * 🧊 **IkaNoSyncFetchedIndexProgress** — triggered when `consensus_commit_sync_fetched_index` is stuck.
-* 🔴 **IkaNodeDown** — node not reachable.
+* 🔴 **IkaNodeDown** — triggered when node not reachable.
 
-### 🚨 Sui Validator Alerts Overview
+### 🚨 Sui Fullnode Alerts Overview
 
 * ⚠️ **SuiHighestSyncedCheckpointStuck** — triggered when `highest_synced_checkpoint` is stuck.
-* 🥶 **SuiLastExecutedCheckpointStuck** — triggered when `last_executed_checkpoint` is stuck.
-* 🔵 **SuiNodeDown** — node not reachable.
+* 🧊 **SuiLastExecutedCheckpointStuck** — triggered when `last_executed_checkpoint` is stuck.
+* 🔴 **SuiNodeDown** — triggered when node not reachable.
 
 
 ### 3.8 Set up alert rules for Ika Validator
 
 ```bash
-sudo tee /etc/prometheus/ika_validator_alerts_rules.yml > /dev/null << EOF
+sudo tee /etc/prometheus/ika_validator_alert_rules.yml > /dev/null << 'EOF'
 groups:
 - name: ika_validator_alerts
   rules:
@@ -404,7 +404,7 @@ EOF
 ### 3.9 Set up alert rules for Sui Fullnode
 
 ```bash
-sudo tee /etc/prometheus/sui_fullnode_alerts_rules.yml > /dev/null << EOF
+sudo tee /etc/prometheus/sui_fullnode_alert_rules.yml > /dev/null << 'EOF'
 groups:
 - name: sui_fullnode_alerts
   rules:
@@ -442,10 +442,17 @@ EOF
 ```bash
 sudo sed -i '/^scrape_configs:/i \
 rule_files:\
-  - "sui_fullnode_alerts_rules.yml"\
-  - "ika_validator_alerts_rules.yml"\
+  - "sui_fullnode_alert_rules.yml"\
+  - "ika_validator_alert_rules.yml"\
+\
+alerting:\
+  alertmanagers:\
+    - static_configs:\
+        - targets:\
+            - "alertmanager:'"${ALERTMANAGER_PORT}"'"\
 ' /etc/prometheus/prometheus.yml
 ```
+
 ```bash
 sudo systemctl restart prometheus && \
 sudo journalctl -u prometheus -f -o cat
@@ -465,13 +472,12 @@ curl -X POST http://127.0.0.1:9093/api/v2/alerts \
       "annotations": {
         "summary": "🔥 Test alert",
         "description": "This is just a test of all notification channels."
-      },
-      "startsAt": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"
+      }
     }
   ]'
 ```
 
-### 3.12 Resolve the test alert in Alertmanager or wait a few minutes so Alertmanager resolves it itself
+### 3.12 Resolve the test alert in Alertmanager or wait a few minutes so Alertmanager resolves the alert itself
 
 ```bash
 curl -X POST http://127.0.0.1:9093/api/v2/alerts \
@@ -485,9 +491,7 @@ curl -X POST http://127.0.0.1:9093/api/v2/alerts \
       "annotations": {
         "summary": "🔔 Test alert (resolving)",
         "description": "This marks the TestAlert as RESOLVED."
-      },
-      "startsAt": "'"$(date -u -d '2 minutes ago' +%Y-%m-%dT%H:%M:%SZ)"'",
-      "endsAt": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"
+      }
     }
   ]'
 ```
