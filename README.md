@@ -48,7 +48,7 @@ sudo mkdir /etc/prometheus /var/lib/prometheus
 ```bash
 cd /etc/prometheus
 sudo wget https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.${ARCH}.tar.gz
-tar xvf prometheus-${VERSION}.${ARCH}.tar.gz --strip-components=1
+sudo tar xvf prometheus-${VERSION}.${ARCH}.tar.gz --strip-components=1
 ./prometheus --version && ./promtool --version
 sudo cp ./prometheus ./promtool /usr/local/bin/
 ```
