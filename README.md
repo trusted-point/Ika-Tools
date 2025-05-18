@@ -366,78 +366,18 @@ sudo journalctl -u alertmanager -f -o cat
 * 🔴 **SuiNodeDown** — triggered when node not reachable.
 
 
-### 3.8 Set up alert rules for Ika Validator
+### 3.8 Download Ika Validator alert rules
 
 ```bash
-sudo tee /etc/prometheus/ika_validator_alert_rules.yml > /dev/null << 'EOF'
-groups:
-- name: ika_validator_alerts
-  rules:
-
-  - alert: IkaNoLeaderRoundProgress
-    expr: increase(consensus_last_committed_leader_round{network="testnet",group="IkaValidator"}[10m]) == 0
-    for: 10m
-    labels:
-      severity: warning
-    annotations:
-      summary: "consensus_last_committed_leader_round has been stuck for 10m"
-      description: "The metric `consensus_last_committed_leader_round` has not increased in the last 10 minutes."
-
-  - alert: IkaNoSyncFetchedIndexProgress
-    expr: increase(consensus_commit_sync_fetched_index{network="testnet",group="IkaValidator"}[10m]) == 0
-    for: 10m
-    labels:
-      severity: critical
-    annotations:
-      summary: "consensus_commit_sync_fetched_index has been stuck for 10m"
-      description: "The metric `consensus_commit_sync_fetched_index` has not increased in the last 10 minutes."
-    
-  - alert: IkaNodeDown
-    expr: up{job="Ika-Validator"} == 0
-    for: 10m
-    labels:
-      severity: critical
-    annotations:
-      summary: "Ika node is down"
-      description: "The Ika validator target is not reachable (up == 0) for over 10 minutes."
-EOF
+sudo wget -O /etc/prometheus/ika_validator_alert_rules.yml \
+  https://raw.githubusercontent.com/trusted-point/Ika-Tools/main/prometheus/rules/ika_validator_alert_rules.yml
 ```
 
-### 3.9 Set up alert rules for Sui Fullnode
+### 3.9 Download Sui Fullnode alert rules
 
 ```bash
-sudo tee /etc/prometheus/sui_fullnode_alert_rules.yml > /dev/null << 'EOF'
-groups:
-- name: sui_fullnode_alerts
-  rules:
-
-  - alert: SuiHighestSyncedCheckpointStuck
-    expr: increase(highest_synced_checkpoint{job="Sui-Fullnode"}[10m]) == 0
-    for: 10m
-    labels:
-      severity: critical
-    annotations:
-      summary: "Sui highest_synced_checkpoint has been stuck for 10m"
-      description: "The metric `highest_synced_checkpoint` has not increased in the last 10 minutes."
-
-  - alert: SuiLastExecutedCheckpointStuck
-    expr: increase(last_executed_checkpoint{job="Sui-Fullnode"}[10m]) == 0
-    for: 10m
-    labels:
-      severity: critical
-    annotations:
-      summary: "Sui last_executed_checkpoint has been stuck for 10m"
-      description: "The metric `last_executed_checkpoint` has not increased in the last 10 minutes."
-
-  - alert: SuiNodeDown
-    expr: up{job="Sui-Fullnode"} == 0
-    for: 5m
-    labels:
-      severity: critical
-    annotations:
-      summary: "Sui Fullnode is down"
-      description: "The Sui fullnode target is not reachable (up == 0) for over 10 minutes."
-EOF
+sudo wget -O /etc/prometheus/sui_fullnode_alert_rules.yml \
+  https://raw.githubusercontent.com/trusted-point/Ika-Tools/main/prometheus/rules/sui_fullnode_alert_rules.yml
 ```
 
 ### 3.10 Edit prometheus.yml adn restart prometheus unit to grab alerts rules
