@@ -53,7 +53,7 @@ tar xvf prometheus-${VERSION}.${ARCH}.tar.gz --strip-components=1
 sudo cp ./prometheus ./promtool /usr/local/bin/
 ```
 
-### 1.3 Create config (Update targets if needed)
+### 1.3 Create `prometheus.yml` config
 
 ```bash
 sudo tee /etc/prometheus/prometheus.yml > /dev/null <<EOF
