@@ -164,7 +164,6 @@ datasources:
     editable: true
 EOF
 ```
-
 ```bash
 sudo systemctl restart grafana-server && sudo journalctl -u grafana-server -f -o cat
 ```
@@ -180,7 +179,6 @@ sudo systemctl restart grafana-server && sudo journalctl -u grafana-server -f -o
 
 ```bash
 sudo mkdir -p /var/lib/grafana/dashboards
-sudo chown grafana:grafana /var/lib/grafana/dashboards
 ```
 
 ```bash
@@ -201,6 +199,9 @@ EOF
 
 ```bash
 sudo wget -O /var/lib/grafana/dashboards/Trusted-Point-Ika-Sui.json https://raw.githubusercontent.com/trusted-point/Ika-Tools/refs/heads/main/grafana/dashboards/Grafana-TrustedPoint-Ika-Sui.json
+```
+```bash
+sudo chown -R grafana:grafana /var/lib/grafana/dashboards
 ```
 
 ```bash
