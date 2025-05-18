@@ -1,0 +1,30 @@
+groups:
+- name: sui_fullnode_alerts
+  rules:
+
+  - alert: SuiHighestSyncedCheckpointStuck
+    expr: increase(highest_synced_checkpoint{job="Sui-Fullnode"}[10m]) == 0
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Sui highest_synced_checkpoint has been stuck for 10m"
+      description: "The metric `highest_synced_checkpoint` has not increased in the last 10 minutes."
+
+  - alert: SuiLastExecutedCheckpointStuck
+    expr: increase(last_executed_checkpoint{job="Sui-Fullnode"}[10m]) == 0
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Sui last_executed_checkpoint has been stuck for 10m"
+      description: "The metric `last_executed_checkpoint` has not increased in the last 10 minutes."
+
+  - alert: SuiNodeDown
+    expr: up{job="Sui-Fullnode"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Sui Fullnode is down"
+      description: "The Sui fullnode target is not reachable (up == 0) for over 10 minutes."
