@@ -27,7 +27,7 @@ Contributions are highly welcomed! Feel free to open issues and submit pull requ
 
 ## 1. Prometheus
 
-### 1.0 Define your variables
+### 1.1 Define your variables
 
 ```bash
 VERSION="3.3.1"
@@ -37,13 +37,13 @@ PROMETHEUS_PORT="9090"
 SUI_METRICS_TARGET="127.0.0.1:9174"
 IKA_METRICS_TARGET="127.0.0.1:9184"
 ```
-### 1.1 Create a prometheus user and directories
+### 1.2 Create a prometheus user and directories
 
 ```bash
 sudo useradd --no-create-home --shell /bin/false prometheus
 sudo mkdir /etc/prometheus /var/lib/prometheus
 ```
-### 1.2 Download & unpack the latest Prometheus
+### 1.3 Download & unpack the latest Prometheus
 
 ```bash
 cd /etc/prometheus
@@ -53,7 +53,7 @@ tar xvf prometheus-${VERSION}.${ARCH}.tar.gz --strip-components=1
 sudo cp ./prometheus ./promtool /usr/local/bin/
 ```
 
-### 1.3 Create `prometheus.yml` config
+### 1.4 Create `prometheus.yml` config
 
 ```bash
 sudo tee /etc/prometheus/prometheus.yml > /dev/null <<EOF
@@ -83,7 +83,7 @@ EOF
 sudo chown -R prometheus:prometheus /etc/prometheus /var/lib/prometheus
 ```
 
-### 1.4 Create systemd unit
+### 1.5 Create systemd unit
 
 ```bash
 sudo tee /etc/systemd/system/prometheus.service <<EOF
@@ -106,7 +106,7 @@ WantedBy=multi-user.target
 EOF
 ```
 
-### 1.5 Start & enable
+### 1.6 Start & enable
 
 ```bash
 sudo systemctl daemon-reload && \
@@ -152,7 +152,7 @@ sudo journalctl -u grafana-server -f -o cat
 **Option A:** Create a provisioning YAML so Grafana will load the Prometheus data source on startup:
 
 ```bash
-sudo tee /etc/grafana/provisioning/datasources/prometheus.yaml > /dev/null << EOF
+sudo tee /etc/grafana/provisioning/datasources/prometheus.yaml > /dev/null <<EOF
 apiVersion: 1
 
 datasources:
@@ -182,7 +182,7 @@ sudo mkdir -p /var/lib/grafana/dashboards
 ```
 
 ```bash
-sudo tee /etc/grafana/provisioning/dashboards/dashboard.yaml > /dev/null << EOF
+sudo tee /etc/grafana/provisioning/dashboards/dashboard.yaml > /dev/null <<EOF
 apiVersion: 1
 
 providers:
@@ -228,7 +228,7 @@ sudo systemctl restart grafana-server && sudo journalctl -u grafana-server -f -o
 
 ## 3. Alertmanager
 
-### 3.0 Set up variables
+### 3.1 Set up variables
 
 **NOTE:** If you don’t want to enable some of the provided notification channels, simply comment out its corresponding entry both under the `route:` section and in the `receivers:` list. Also, ensure that the final route (PagerDuty) does not include continue: true, so that alerts aren’t passed on after routing to PagerDuty.
 
@@ -245,14 +245,14 @@ SLACK_WEBHOOK_URL="https://hooks.slack.com/services/AAA/BBB/CCC"
 PAGERDUTY_INTEGRATION_KEY="123abc"
 ```
 
-### 3.1 Create an alertmanager user and directories
+### 3.2 Create an alertmanager user and directories
 
 ```bash
 sudo useradd --no-create-home --shell /bin/false alertmanager
 sudo mkdir /etc/alertmanager /var/lib/alertmanager
 ```
 
-### 3.2 Download & unpack the latest Alertmanager
+### 3.3 Download & unpack the latest Alertmanager
 
 ```bash
 cd /etc/alertmanager
@@ -265,7 +265,7 @@ sudo cp ./alertmanager ./amtool /usr/local/bin/
 ### 3.4 Set up Alertmanager config
 
 ```bash
-sudo tee /etc/alertmanager/alertmanager.yml > /dev/null << EOF
+sudo tee /etc/alertmanager/alertmanager.yml > /dev/null <<EOF
 global:
   resolve_timeout: 5m
 
@@ -316,7 +316,7 @@ receivers:
 EOF
 ```
 
-### 3.5 Adjust directory ownership
+### 3.5 Correct ownership on Alertmanager directories
 
 ```bash
 sudo chown -R alertmanager:alertmanager /etc/alertmanager /var/lib/alertmanager
@@ -325,7 +325,7 @@ sudo chown -R alertmanager:alertmanager /etc/alertmanager /var/lib/alertmanager
 ### 3.6 Create systemd unit
 
 ```bash
-sudo tee /etc/systemd/system/alertmanager.service << EOF
+sudo tee /etc/systemd/system/alertmanager.service <<EOF
 [Unit]
 Description=Prometheus Alertmanager
 Wants=network-online.target
@@ -381,7 +381,8 @@ sudo wget -O /etc/prometheus/sui_fullnode_alert_rules.yml \
   https://raw.githubusercontent.com/trusted-point/Ika-Tools/main/prometheus/rules/sui_fullnode_alert_rules.yml
 ```
 
-### 3.10 Edit prometheus.yml adn restart prometheus unit to grab alerts rules
+### 3.10 Update `prometheus.yml` and restart the Prometheus service to load alert rules
+
 ```bash
 sudo sed -i '/^scrape_configs:/i \
 rule_files:\
@@ -401,7 +402,7 @@ sudo systemctl restart prometheus && \
 sudo journalctl -u prometheus -f -o cat
 ```
 
-### 3.11 Send a test alert to Alertmanager. Ensure you receive the message in the configured channels
+### 3.11 Send a test alert to Alertmanager and ensure it reaches each configured channel
 
 ```bash
 curl -X POST http://127.0.0.1:9093/api/v2/alerts \
@@ -420,7 +421,7 @@ curl -X POST http://127.0.0.1:9093/api/v2/alerts \
   ]'
 ```
 
-### 3.12 Resolve the test alert in Alertmanager or wait a few minutes so Alertmanager resolves the alert itself
+### 3.12 Resolve the test alert in Alertmanager (or wait for automatic resolution) and send the appropriate notification
 
 ```bash
 curl -X POST http://127.0.0.1:9093/api/v2/alerts \
