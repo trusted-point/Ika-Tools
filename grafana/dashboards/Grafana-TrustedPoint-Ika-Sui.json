@@ -507,8 +507,7 @@
                     "value": null
                   }
                 ]
-              },
-              "unit": "bytes"
+              }
             },
             "overrides": []
           },
@@ -518,7 +517,7 @@
             "x": 20,
             "y": 1
           },
-          "id": 354,
+          "id": 392,
           "options": {
             "colorMode": "none",
             "graphMode": "area",
@@ -545,7 +544,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "code",
-              "expr": "sum(\r\n  rate(consensus_proposed_block_size_sum{network=\"$network\", group=\"IkaValidator\"}[1m])\r\n)\r\n/\r\nsum(\r\n  rate(consensus_proposed_block_size_count{network=\"$network\", group=\"IkaValidator\"}[1m])\r\n)\r\n",
+              "expr": "highest_known_checkpoint{network=\"$network\", group=\"IkaValidator\"}",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "{{host}}",
@@ -554,7 +553,7 @@
               "useBackend": false
             }
           ],
-          "title": "Proposed Blocks Size [1m avg]",
+          "title": "Highest Known Checkpoint",
           "type": "stat"
         },
         {
@@ -597,7 +596,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 5
+            "y": 301
           },
           "id": 337,
           "options": {
@@ -666,7 +665,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 5
+            "y": 301
           },
           "id": 388,
           "options": {
@@ -735,7 +734,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 5
+            "y": 301
           },
           "id": 326,
           "options": {
@@ -804,7 +803,7 @@
             "h": 4,
             "w": 4,
             "x": 16,
-            "y": 5
+            "y": 301
           },
           "id": 386,
           "options": {
@@ -873,9 +872,9 @@
             "h": 4,
             "w": 4,
             "x": 20,
-            "y": 5
+            "y": 301
           },
-          "id": 381,
+          "id": 393,
           "options": {
             "colorMode": "none",
             "graphMode": "area",
@@ -902,7 +901,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "code",
-              "expr": "sum(rate(consensus_proposed_blocks{network=\"$network\", group=\"IkaValidator\", force=\"false\"}[5m])) + sum(rate(consensus_proposed_blocks{network=\"$network\", group=\"IkaValidator\", force=\"true\"}[5m]))",
+              "expr": "highest_synced_checkpoint{network=\"$network\", group=\"IkaValidator\"}",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "{{host}}",
@@ -911,7 +910,7 @@
               "useBackend": false
             }
           ],
-          "title": "Proposed Blocks (/s) [1m avg]",
+          "title": "Highest Synced Checkpoint",
           "type": "stat"
         },
         {
@@ -942,7 +941,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 6
+            "y": 302
           },
           "id": 322,
           "options": {
@@ -1035,7 +1034,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 9
+            "y": 305
           },
           "id": 255,
           "options": {
@@ -1117,7 +1116,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 9
+            "y": 305
           },
           "id": 364,
           "options": {
@@ -1186,7 +1185,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 9
+            "y": 305
           },
           "id": 363,
           "options": {
@@ -1245,21 +1244,10 @@
                   {
                     "color": "#6ed0e0",
                     "value": null
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 10
-                  },
-                  {
-                    "color": "orange",
-                    "value": 100
-                  },
-                  {
-                    "color": "red",
-                    "value": 1000
                   }
                 ]
-              }
+              },
+              "unit": "bytes"
             },
             "overrides": []
           },
@@ -1267,9 +1255,9 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 9
+            "y": 305
           },
-          "id": 380,
+          "id": 354,
           "options": {
             "colorMode": "none",
             "graphMode": "area",
@@ -1296,7 +1284,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "code",
-              "expr": "consensus_highest_accepted_round{network=\"$network\", group=\"IkaValidator\"} - consensus_last_committed_leader_round{network=\"$network\", group=\"IkaValidator\"}",
+              "expr": "sum(\r\n  rate(consensus_proposed_block_size_sum{network=\"$network\", group=\"IkaValidator\"}[1m])\r\n)\r\n/\r\nsum(\r\n  rate(consensus_proposed_block_size_count{network=\"$network\", group=\"IkaValidator\"}[1m])\r\n)\r\n",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "{{host}}",
@@ -1305,7 +1293,7 @@
               "useBackend": false
             }
           ],
-          "title": "Round Sync Lag",
+          "title": "Proposed Blocks Size [1m avg]",
           "type": "stat"
         },
         {
@@ -1326,18 +1314,6 @@
                   {
                     "color": "#6ed0e0",
                     "value": null
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 100
-                  },
-                  {
-                    "color": "orange",
-                    "value": 200
-                  },
-                  {
-                    "color": "red",
-                    "value": 1000
                   }
                 ]
               }
@@ -1348,9 +1324,9 @@
             "h": 4,
             "w": 4,
             "x": 16,
-            "y": 9
+            "y": 305
           },
-          "id": 385,
+          "id": 381,
           "options": {
             "colorMode": "none",
             "graphMode": "area",
@@ -1377,17 +1353,16 @@
               },
               "disableTextWrap": false,
               "editorMode": "code",
-              "expr": "consensus_last_commit_index{network=\"$network\", group=\"IkaValidator\"} - consensus_commit_sync_fetched_index{network=\"$network\", group=\"IkaValidator\"}",
+              "expr": "sum(rate(consensus_proposed_blocks{network=\"$network\", group=\"IkaValidator\", force=\"false\"}[5m])) + sum(rate(consensus_proposed_blocks{network=\"$network\", group=\"IkaValidator\", force=\"true\"}[5m]))",
               "fullMetaSearch": false,
-              "hide": false,
               "includeNullMetadata": true,
               "legendFormat": "{{host}}",
               "range": true,
-              "refId": "B",
+              "refId": "A",
               "useBackend": false
             }
           ],
-          "title": "Commit Sync Lag",
+          "title": "Proposed Blocks (/s) [1m avg]",
           "type": "stat"
         },
         {
@@ -1418,7 +1393,7 @@
             "h": 4,
             "w": 4,
             "x": 20,
-            "y": 9
+            "y": 305
           },
           "id": 387,
           "options": {
@@ -1851,24 +1826,24 @@
                             "color": "dark-green",
                             "index": 1
                           },
-                          "to": 0.3
+                          "to": 0.5
                         },
                         "type": "range"
                       },
                       {
                         "options": {
-                          "from": 0.3,
+                          "from": 0.5,
                           "result": {
                             "color": "dark-yellow",
                             "index": 2
                           },
-                          "to": 0.8
+                          "to": 1
                         },
                         "type": "range"
                       },
                       {
                         "options": {
-                          "from": 0.8,
+                          "from": 1,
                           "result": {
                             "color": "dark-orange",
                             "index": 3
@@ -1972,7 +1947,7 @@
                         "options": {
                           "match": "null+nan",
                           "result": {
-                            "color": "#00000000",
+                            "color": "transparent",
                             "index": 0
                           }
                         },
@@ -2032,7 +2007,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 13
+            "y": 309
           },
           "id": 377,
           "options": {
@@ -2128,7 +2103,7 @@
               "expr": "histogram_quantile(\r\n  0.95,\r\n  sum by (le) (\r\n    rate(consensus_quorum_receive_latency_bucket{network=\"$network\", group=\"IkaValidator\"}[5m])\r\n  )\r\n)",
               "hide": false,
               "interval": "120",
-              "legendFormat": "- Quorum Lat p95 ⏱️ ",
+              "legendFormat": "- Quorum Lat (p95) ⏱️ ",
               "range": true,
               "refId": "F"
             },
@@ -2226,7 +2201,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -2237,7 +2213,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 599
+            "y": 2
           },
           "id": 368,
           "options": {
@@ -2348,7 +2324,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -2359,7 +2336,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 599
+            "y": 2
           },
           "id": 336,
           "options": {
@@ -2506,7 +2483,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -2517,7 +2495,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 599
+            "y": 2
           },
           "id": 369,
           "options": {
@@ -2665,7 +2643,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red"
+                    "color": "red",
+                    "value": null
                   },
                   {
                     "color": "yellow",
@@ -2689,7 +2668,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 673
+            "y": 307
           },
           "id": 338,
           "options": {
@@ -2811,7 +2790,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -2847,7 +2827,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 673
+            "y": 307
           },
           "id": 379,
           "options": {
@@ -2979,7 +2959,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -2990,7 +2971,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 673
+            "y": 307
           },
           "id": 372,
           "options": {
@@ -3092,6 +3073,369 @@
                 "barAlignment": 0,
                 "barWidthFactor": 0.6,
                 "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 8,
+            "x": 8,
+            "y": 316
+          },
+          "id": 389,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.5.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "highest_known_checkpoint{network=\"$network\", group=\"IkaValidator\"}",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Highest Known",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "highest_synced_checkpoint{network=\"$network\", group=\"IkaValidator\"}",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Highest Synced",
+              "range": true,
+              "refId": "B",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "highest_verified_checkpoint{network=\"$network\", group=\"IkaValidator\"}",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Highest Verified",
+              "range": true,
+              "refId": "C",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "last_certified_dwallet_checkpoint{network=\"$network\", group=\"IkaValidator\"}",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Last Certified Ika",
+              "range": true,
+              "refId": "D",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "last_constructed_dwallet_checkpoint{network=\"$network\", group=\"IkaValidator\"}",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Last Constructed Ika",
+              "range": true,
+              "refId": "E",
+              "useBackend": false
+            }
+          ],
+          "title": "Checkpoints",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "Highest Known"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": true
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 8,
+            "x": 16,
+            "y": 316
+          },
+          "id": 391,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.5.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "rate(highest_known_checkpoint{network=\"$network\", group=\"IkaValidator\"}[1m])",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Highest Known",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "rate(highest_synced_checkpoint{network=\"$network\", group=\"IkaValidator\"}[1m])",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Highest Synced",
+              "range": true,
+              "refId": "B",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "rate(highest_verified_checkpoint{network=\"$network\", group=\"IkaValidator\"}[1m])",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Highest Verified",
+              "range": true,
+              "refId": "C",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "rate(last_certified_dwallet_checkpoint{network=\"$network\", group=\"IkaValidator\"}[1m])",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Last Certified Ika",
+              "range": true,
+              "refId": "D",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "rate(last_constructed_dwallet_checkpoint{network=\"$network\", group=\"IkaValidator\"}[1m])",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "Last Constructed Ika",
+              "range": true,
+              "refId": "E",
+              "useBackend": false
+            }
+          ],
+          "title": "Checkpoints per Second [1m avg]",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
                 "fillOpacity": 5,
                 "gradientMode": "none",
                 "hideFrom": {
@@ -3124,7 +3468,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -3135,7 +3480,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 682
+            "y": 325
           },
           "id": 370,
           "options": {
@@ -3237,7 +3582,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               },
@@ -3249,7 +3595,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 682
+            "y": 325
           },
           "id": 371,
           "options": {
@@ -3350,7 +3696,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               },
@@ -3362,7 +3709,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 691
+            "y": 334
           },
           "id": 335,
           "options": {
@@ -3490,7 +3837,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "dark-red"
+                    "color": "dark-red",
+                    "value": null
                   },
                   {
                     "color": "green",
@@ -3505,7 +3853,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 691
+            "y": 334
           },
           "id": 367,
           "interval": "2m",
@@ -3647,7 +3995,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 52
+            "y": 3
           },
           "id": 333,
           "options": {
@@ -3777,7 +4125,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 52
+            "y": 3
           },
           "id": 356,
           "options": {
@@ -3907,7 +4255,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 52
+            "y": 3
           },
           "id": 329,
           "options": {
@@ -4010,7 +4358,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 61
+            "y": 96
           },
           "id": 347,
           "options": {
@@ -4149,7 +4497,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 61
+            "y": 96
           },
           "id": 334,
           "options": {
@@ -4262,7 +4610,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 61
+            "y": 96
           },
           "id": 339,
           "options": {
@@ -4405,7 +4753,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 70
+            "y": 105
           },
           "id": 357,
           "options": {
@@ -4508,7 +4856,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 70
+            "y": 105
           },
           "id": 358,
           "options": {
@@ -4647,7 +4995,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 70
+            "y": 105
           },
           "id": 342,
           "options": {
@@ -4759,7 +5107,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "dark-green"
+                    "color": "dark-green",
+                    "value": null
                   }
                 ]
               }
@@ -4838,7 +5187,7 @@
             "h": 31,
             "w": 12,
             "x": 0,
-            "y": 628
+            "y": 380
           },
           "id": 374,
           "options": {
@@ -4955,7 +5304,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -4982,7 +5332,7 @@
             "h": 31,
             "w": 12,
             "x": 12,
-            "y": 628
+            "y": 380
           },
           "id": 376,
           "options": {
@@ -5099,7 +5449,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -5126,7 +5477,7 @@
             "h": 31,
             "w": 12,
             "x": 0,
-            "y": 697
+            "y": 411
           },
           "id": 378,
           "options": {
@@ -5201,7 +5552,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -5280,7 +5632,7 @@
             "h": 31,
             "w": 12,
             "x": 12,
-            "y": 697
+            "y": 411
           },
           "id": 375,
           "options": {
@@ -5365,7 +5717,7 @@
             "h": 31,
             "w": 12,
             "x": 0,
-            "y": 728
+            "y": 442
           },
           "id": 344,
           "options": {
@@ -5456,7 +5808,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red"
+                    "color": "red",
+                    "value": null
                   },
                   {
                     "color": "dark-orange",
@@ -5480,7 +5833,7 @@
             "h": 5,
             "w": 4,
             "x": 0,
-            "y": 103
+            "y": 5
           },
           "id": 280,
           "options": {
@@ -5498,7 +5851,7 @@
             "showThresholdMarkers": true,
             "sizing": "auto"
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -5531,7 +5884,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#6ed0e0"
+                    "color": "#6ed0e0",
+                    "value": null
                   }
                 ]
               }
@@ -5542,7 +5896,7 @@
             "h": 4,
             "w": 2,
             "x": 4,
-            "y": 103
+            "y": 5
           },
           "id": 204,
           "options": {
@@ -5562,7 +5916,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -5613,7 +5967,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#6ed0e0"
+                    "color": "#6ed0e0",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -5628,7 +5983,7 @@
             "h": 4,
             "w": 2,
             "x": 6,
-            "y": 103
+            "y": 5
           },
           "id": 256,
           "options": {
@@ -5648,7 +6003,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -5685,7 +6040,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#6ed0e0"
+                    "color": "#6ed0e0",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -5700,7 +6056,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 103
+            "y": 5
           },
           "id": 308,
           "options": {
@@ -5720,7 +6076,7 @@
             "textMode": "value",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -5757,7 +6113,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#6ed0e0"
+                    "color": "#6ed0e0",
+                    "value": null
                   }
                 ]
               }
@@ -5768,7 +6125,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 103
+            "y": 5
           },
           "id": 307,
           "options": {
@@ -5788,7 +6145,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -5825,11 +6182,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red"
-                  },
-                  {
                     "color": "#6ed0e0",
-                    "value": 5
+                    "value": null
                   }
                 ]
               }
@@ -5840,7 +6194,7 @@
             "h": 4,
             "w": 4,
             "x": 16,
-            "y": 103
+            "y": 5
           },
           "id": 320,
           "options": {
@@ -5860,7 +6214,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -5886,7 +6240,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "Total number of transaction certificates handled",
+          "description": "",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -5897,7 +6251,12 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#6ed0e0"
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "#6ed0e0",
+                    "value": 5
                   }
                 ]
               }
@@ -5908,9 +6267,9 @@
             "h": 4,
             "w": 4,
             "x": 20,
-            "y": 103
+            "y": 5
           },
-          "id": 300,
+          "id": 309,
           "options": {
             "colorMode": "none",
             "graphMode": "area",
@@ -5928,7 +6287,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -5937,7 +6296,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "code",
-              "expr": "total_transaction_certificates{network=\"$network\", group=\"Fullnode\"}",
+              "expr": "rate(total_transaction_certificates{network=\"$network\", group=\"Fullnode\"}[1m])",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "{{host}}",
@@ -5946,7 +6305,7 @@
               "useBackend": false
             }
           ],
-          "title": "Total Transaction Certs",
+          "title": "Transactions (/s) [1m avg]",
           "type": "stat"
         },
         {
@@ -5965,7 +6324,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#00000000"
+                    "color": "#00000000",
+                    "value": null
                   },
                   {
                     "color": "#000000",
@@ -5997,7 +6357,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 107
+            "y": 47
           },
           "id": 323,
           "options": {
@@ -6017,7 +6377,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6055,7 +6415,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red"
+                    "color": "red",
+                    "value": null
                   },
                   {
                     "color": "orange",
@@ -6078,7 +6439,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 107
+            "y": 47
           },
           "id": 301,
           "options": {
@@ -6098,7 +6459,7 @@
             "textMode": "value",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6135,7 +6496,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#6ed0e0"
+                    "color": "#6ed0e0",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -6150,7 +6512,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 107
+            "y": 47
           },
           "id": 304,
           "options": {
@@ -6170,7 +6532,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6207,7 +6569,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#6ed0e0"
+                    "color": "#6ed0e0",
+                    "value": null
                   }
                 ]
               }
@@ -6218,7 +6581,7 @@
             "h": 4,
             "w": 4,
             "x": 16,
-            "y": 107
+            "y": 47
           },
           "id": 302,
           "options": {
@@ -6238,7 +6601,7 @@
             "textMode": "value",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6264,7 +6627,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "",
+          "description": "Total number of transaction certificates handled",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -6275,11 +6638,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red"
-                  },
-                  {
                     "color": "#6ed0e0",
-                    "value": 5
+                    "value": null
                   }
                 ]
               }
@@ -6290,9 +6650,9 @@
             "h": 4,
             "w": 4,
             "x": 20,
-            "y": 107
+            "y": 47
           },
-          "id": 309,
+          "id": 300,
           "options": {
             "colorMode": "none",
             "graphMode": "area",
@@ -6310,7 +6670,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6319,7 +6679,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "code",
-              "expr": "rate(total_transaction_certificates{network=\"$network\", group=\"Fullnode\"}[1m])",
+              "expr": "total_transaction_certificates{network=\"$network\", group=\"Fullnode\"}",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "{{host}}",
@@ -6328,7 +6688,7 @@
               "useBackend": false
             }
           ],
-          "title": "Transactions (/s) [1m avg]",
+          "title": "Total Transaction Certs",
           "type": "stat"
         },
         {
@@ -6347,7 +6707,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#6ed0e0"
+                    "color": "#6ed0e0",
+                    "value": null
                   }
                 ]
               }
@@ -6358,7 +6719,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 108
+            "y": 48
           },
           "id": 299,
           "options": {
@@ -6378,7 +6739,7 @@
             "textMode": "name",
             "wideLayout": true
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6466,7 +6827,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -6477,7 +6839,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 112
+            "y": 6
           },
           "id": 270,
           "options": {
@@ -6493,7 +6855,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6593,7 +6955,8 @@
                 "mode": "percentage",
                 "steps": [
                   {
-                    "color": "red"
+                    "color": "red",
+                    "value": null
                   },
                   {
                     "color": "yellow",
@@ -6617,7 +6980,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 112
+            "y": 6
           },
           "id": 292,
           "options": {
@@ -6633,7 +6996,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6699,7 +7062,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -6710,7 +7074,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 112
+            "y": 6
           },
           "id": 245,
           "options": {
@@ -6726,7 +7090,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6842,7 +7206,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red"
+                    "color": "red",
+                    "value": null
                   },
                   {
                     "color": "semi-dark-orange",
@@ -6866,7 +7231,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 121
+            "y": 15
           },
           "id": 265,
           "options": {
@@ -6882,7 +7247,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -6952,7 +7317,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "dark-red"
+                    "color": "dark-red",
+                    "value": null
                   },
                   {
                     "color": "green",
@@ -6967,7 +7333,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 121
+            "y": 15
           },
           "id": 289,
           "interval": "2m",
@@ -6984,7 +7350,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -7053,7 +7419,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -7064,7 +7431,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 121
+            "y": 15
           },
           "id": 332,
           "options": {
@@ -7080,7 +7447,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -7198,7 +7565,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -7209,7 +7577,7 @@
             "h": 10,
             "w": 12,
             "x": 0,
-            "y": 130
+            "y": 24
           },
           "id": 314,
           "options": {
@@ -7227,7 +7595,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -7309,7 +7677,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   }
                 ]
               }
@@ -7320,7 +7689,7 @@
             "h": 10,
             "w": 12,
             "x": 12,
-            "y": 130
+            "y": 24
           },
           "id": 317,
           "options": {
@@ -7338,7 +7707,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -7419,7 +7788,7 @@
             "h": 10,
             "w": 12,
             "x": 0,
-            "y": 140
+            "y": 34
           },
           "id": 318,
           "options": {
@@ -7437,7 +7806,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -7558,7 +7927,7 @@
             "h": 10,
             "w": 12,
             "x": 12,
-            "y": 140
+            "y": 34
           },
           "id": 319,
           "options": {
@@ -7578,7 +7947,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.0.0",
+          "pluginVersion": "11.5.1",
           "targets": [
             {
               "datasource": {
@@ -7696,6 +8065,6 @@
   "timezone": "",
   "title": "IKA x SUI",
   "uid": "2gf6dsg-4d4a",
-  "version": 4,
+  "version": 20,
   "weekStart": "monday"
 }
